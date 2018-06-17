@@ -8,8 +8,8 @@ from spacy_arguing_lexicon.exceptions import LexiconMissingError
 
 class ArguingLexiconParser(object):
 
-    MACROS_PATH = os.path.join("spacy_arguing_lexicon", "lexicon", "{}", "macros")
-    PATTERNS_PATH = os.path.join("spacy_arguing_lexicon", "lexicon", "{}", "patterns")
+    MACROS_PATH = os.path.join(os.path.dirname(__file__), "lexicon", "{}", "macros")
+    PATTERNS_PATH = os.path.join(os.path.dirname(__file__), "lexicon", "{}", "patterns")
 
     MACRO_PATTERN = re.compile("(@[A-Z0-9]+)")
 
