@@ -75,6 +75,8 @@ The MPQA arguing lexicon is made available under the GNU General Public License.
 It is a set of about 200 regular expressions with macros divided into 17 categories.
 For more information about how the lexicon was created we refer to the [arguing lexicon homepage](http://mpqa.cs.pitt.edu/lexicons/arg_lexicon/).
 
+The Dutch arguing lexicon is a translation of the English lexicon and is available only through this extension.
+
 Under the hood this extension parses the regular expressions and unpacks any macros inside of them. 
 The ```doc._.arguments.get_argument_spans``` method tries to match any lexicon regular expression against the text of the input [spaCy Doc](https://spacy.io/api/doc).
 When a match is found the match gets transformed into a [spaCy Span](https://spacy.io/api/span) before it gets yielded.
