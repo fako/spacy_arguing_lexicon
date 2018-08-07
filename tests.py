@@ -54,4 +54,9 @@ assert because_match.group() == "because"
 # Init the parser again. Should not recreate extensions.
 parser = ArguingLexiconParser(lang=nlp.lang)
 
+# Get all possible words used in the lexicon
+lexicon_vocabulary = parser.get_lexicon_vocabulary()
+assert isinstance(lexicon_vocabulary, set)
+assert len(lexicon_vocabulary) == 317
+
 print("Tests passed!")

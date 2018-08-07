@@ -86,6 +86,17 @@ class ArguingLexiconParser(object):
                 if match is not None:
                     yield arguing_label, match
 
+    def get_lexicon_vocabulary(self):
+        vocabulary = set()
+        for label, patterns in self.PATTERNS.items():
+            for compiled in patterns:
+                words = "".join([char if char.isalnum() or char == "'" else " " for char in compiled.pattern])
+                for word in words.split(" "):
+                    if len(word) <= 1 and not word == "I":
+                        continue
+                    vocabulary.add(word)
+        return vocabulary
+
     def __init__(self, lang="en"):
         super().__init__()
         self.package_check(lang)
