@@ -39,9 +39,12 @@ class ArgumentTexts(object):
             )
         return Span(self.doc, start_token_index, end_token_index, self.get_label_hash(label))
 
-    def get_argument_spans(self):
+    def get_argument_spans_and_matches(self):
         for argument_label, argument_match in self.parser.get_arguing_matches(self.doc):
             span = self.create_span_from_match(argument_match, argument_label)
             if not span:
                 continue
-            yield span
+            yield span, argument_match
+
+    def get_argument_spans(self):
+        return (span for span, match in self.get_argument_spans_and_matches())

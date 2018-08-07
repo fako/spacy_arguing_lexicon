@@ -24,22 +24,31 @@ Daarom is er geen reden waarom zulke stellen geen stabiele en liefdevolle opvoed
 nlp = spacy.load('en')
 nlp.add_pipe(ArguingLexiconParser(lang=nlp.lang))
 test_doc = nlp(EN_EXAMPLE)
-argument_spans = list(test_doc._.arguments.get_argument_spans())
+arguments = list(test_doc._.arguments.get_argument_spans_and_matches())
 
-assert len(argument_spans) == 3, "Extension yielded {} instead of {} Spans".format(len(argument_spans), 3)
+assert len(arguments) == 3, "Extension yielded {} instead of {} Spans".format(len(arguments), 3)
 
-should_span, therefore_span, because_span = argument_spans
+should_argument, therefore_argument, because_argument = arguments
 
+should_span, should_match = should_argument
 assert isinstance(should_span, Span)
 assert should_span.text == "should"
 assert should_span.label_ == "necessity"
+assert should_match is not None
+assert should_match.group() == "should"
 
+therefore_span, therefore_match = therefore_argument
 assert isinstance(therefore_span, Span)
 assert therefore_span.text == "therefore,"
 assert therefore_span.label_ == "causation"
+assert therefore_match is not None
+assert therefore_match.group() == "therefore"
 
+because_span, because_match = because_argument
 assert isinstance(because_span, Span)
 assert because_span.text == "because"
 assert because_span.label_ == "causation"
+assert because_match is not None
+assert because_match.group() == "because"
 
 print("Tests passed!")
