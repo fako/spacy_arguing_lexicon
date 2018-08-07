@@ -91,7 +91,13 @@ class ArguingLexiconParser(object):
         self.package_check(lang)
         self.load_macros(lang)
         self.load_patterns(lang)
-        Doc.set_extension('arguments', getter=ArgumentTexts(self))
+        if not Doc.has_extension('arguments'):
+            Doc.set_extension('arguments', getter=ArgumentTexts(self))
+        else:
+            default, method, getter, setter = Doc.get_extension('arguments')
+            assert isinstance(getter, ArgumentTexts), \
+                "Expected 'arguments' extension to be of type ArgumentTexts " \
+                "but found {}. Namespace clash?".format(type(Doc.get_extension('arguments')))
 
     def __call__(self, doc):
         # All parsing is lazy

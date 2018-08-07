@@ -51,4 +51,7 @@ assert because_span.label_ == "causation"
 assert because_match is not None
 assert because_match.group() == "because"
 
+# Init the parser again. Should not recreate extensions.
+parser = ArguingLexiconParser(lang=nlp.lang)
+
 print("Tests passed!")
