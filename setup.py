@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="spacy_arguing_lexicon",
-    version="0.0.2",
+    version="0.0.3",
     author="Fako Berkers",
     author_email="email@fakoberkers.nl",
     description="A spaCy extension wrapping around the arguing lexicon by MPQA",
