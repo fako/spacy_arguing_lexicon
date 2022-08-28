@@ -7,11 +7,11 @@ Use the arguing lexicon extension for instance for deep argument mining. It is a
 
 ## Getting started
 
-You can install the spaCy extension through pip. It requires spaCy 2.
+You can install the spaCy extension through pip. It requires spaCy 3.
 
 ```bash
 pip install spacy_arguing_lexicon
-python -m spacy download en  # optional, downloads a spaCy language model if you haven't downloaded one already
+python -m spacy download en_core_web_sm
 ```
 
 Then enable the extension by adding the arguing lexicon parser to the spaCy pipeline.
@@ -20,8 +20,8 @@ Then enable the extension by adding the arguing lexicon parser to the spaCy pipe
 import spacy
 from spacy_arguing_lexicon import ArguingLexiconParser
 
-nlp = spacy.load("en")
-nlp.add_pipe(ArguingLexiconParser(lang=nlp.lang))
+nlp = spacy.load("en_core_web_sm")
+nlp.add_pipe("arguments")
 ```
 
 Now you can load any document and access the parts of that document which contain arguments. 

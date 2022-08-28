@@ -2,6 +2,7 @@ import os
 import re
 
 from spacy.tokens import Doc
+
 from spacy_arguing_lexicon.arguments import ArgumentTexts
 from spacy_arguing_lexicon.exceptions import LexiconMissingError
 
@@ -19,11 +20,15 @@ class ArguingLexiconParser(object):
     def package_check(self, lang):
         if not os.path.exists(self.MACROS_PATH.format(lang)):
             raise LexiconMissingError(
-                "Trying to load Arguing Lexicon without macros file for language {}".format(lang)
+                "Trying to load Arguing Lexicon without macros file for language {}".format(
+                    lang
+                )
             )
         if not os.path.exists(self.PATTERNS_PATH.format(lang)):
             raise LexiconMissingError(
-                "Trying to load Arguing Lexicon without patterns file for language {}".format(lang)
+                "Trying to load Arguing Lexicon without patterns file for language {}".format(
+                    lang
+                )
             )
 
     def load_macros(self, lang):
@@ -38,13 +43,20 @@ class ArguingLexiconParser(object):
                     if macro_line.startswith("#"):
                         continue
                     # Add macros
-                    macro_label, macro_definition = self.preprocess_pattern(macro_line).split("=")
-                    macro = [mcr.strip() for mcr in macro_definition.strip().strip("{}").split(",")]
+                    macro_label, macro_definition = self.preprocess_pattern(
+                        macro_line
+                    ).split("=")
+                    macro = [
+                        mcr.strip()
+                        for mcr in macro_definition.strip().strip("{}").split(",")
+                    ]
                     self.MACROS[macro_label] = macro
 
     def preprocess_pattern(self, pattern):
         stripped_pattern = pattern.replace("\\'", "'").strip()
-        return "{}\\b".format(stripped_pattern)  # the \b makes sure that a match ends with a non-word token
+        return "{}\\b".format(
+            stripped_pattern
+        )  # the \b makes sure that a match ends with a non-word token
 
     def compile_pattern(self, pattern):
         macro_match = self.MACRO_PATTERN.search(pattern)
@@ -61,7 +73,9 @@ class ArguingLexiconParser(object):
         for entry in os.listdir(self.PATTERNS_PATH.format(lang)):
             if not entry.endswith(".tff"):
                 continue
-            with open(os.path.join(self.PATTERNS_PATH.format(lang), entry)) as patterns_file:
+            with open(
+                os.path.join(self.PATTERNS_PATH.format(lang), entry)
+            ) as patterns_file:
                 pattern_class = None
                 for pattern_line in patterns_file.readlines():
                     # Skip empty lines and comments
@@ -90,7 +104,12 @@ class ArguingLexiconParser(object):
         vocabulary = set()
         for label, patterns in self.PATTERNS.items():
             for compiled in patterns:
-                words = "".join([char if char.isalnum() or char == "'" else " " for char in compiled.pattern])
+                words = "".join(
+                    [
+                        char if char.isalnum() or char == "'" else " "
+                        for char in compiled.pattern
+                    ]
+                )
                 for word in words.split(" "):
                     if len(word) <= 1 and not word == "I":
                         continue
@@ -102,14 +121,8 @@ class ArguingLexiconParser(object):
         self.package_check(lang)
         self.load_macros(lang)
         self.load_patterns(lang)
-        if not Doc.has_extension('arguments'):
-            Doc.set_extension('arguments', getter=ArgumentTexts(self))
-        else:
-            default, method, getter, setter = Doc.get_extension('arguments')
-            assert isinstance(getter, ArgumentTexts), \
-                "Expected 'arguments' extension to be of type ArgumentTexts " \
-                "but found {}. Namespace clash?".format(type(Doc.get_extension('arguments')))
+        self.argument_texts = ArgumentTexts(self)
 
     def __call__(self, doc):
-        # All parsing is lazy
+        Doc.set_extension("arguments", force=True, getter=self.argument_texts)
         return doc
